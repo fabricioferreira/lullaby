@@ -1,0 +1,19 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+	"editor.insertSpaces": false,
+	"editor.formatOnType": true,
+	"editor.tabCompletion": true,
+	"files.trimTrailingWhitespace": true,
+	"editor.formatOnSave": true,
+	"editor.renderWhitespace": "all",
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/.DS_Store": true,
+		"**/*.js": {
+			"when": "$(basename).ts"
+		},
+		"**/*.js.map": true
+	}
+}

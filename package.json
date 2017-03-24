@@ -1,0 +1,38 @@
+{
+  "name": "unyoke",
+  "version": "0.0.1",
+  "description": "unYoke is a REST enabler API that you can use to rapidly expose a data source as a RESTfull service.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha",
+    "test:watch": "npm run test -- -w",
+    "build": "tsc ",
+    "pretest": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabricioferreira/unyoke.git"
+  },
+  "keywords": [
+    "rest"
+  ],
+  "author": "Fabricio Ferreira",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fabricioferreira/unyoke/issues"
+  },
+  "homepage": "https://github.com/fabricioferreira/unyoke#readme",
+  "devDependencies": {
+    "@types/mssql": "^3.3.1",
+    "@types/node": "^7.0.8",
+    "@types/lodash": "^4.14.56",
+    "mocha": "^3.2.0",
+    "typescript": "^2.2.1"
+  },
+  "dependencies": {
+    "mssql": "^4.0.0-alpha2"
+  }
+}
