@@ -14,14 +14,20 @@ export class ConnectionInformation {
 export class Schema {
 	Owner: string;
 	Name: string;
+	constructor(schema: Schema) {
+		Object.assign(this, schema);
+	}
 }
 
 export class Table {
 	Schema: Schema;
-	Owner: string;
+	Id: number;
 	Name: string;
 	Columns: Column[];
 	PrimaryKey: Column[];
+	constructor(table: Table) {
+		Object.assign(this, table);
+	}
 }
 
 export class Column {
@@ -29,4 +35,7 @@ export class Column {
 	DatabaseType: string;
 	Size: number;
 	Precision: number;
+	constructor(column: Column) {
+		Object.assign(this, column);
+	}
 }
