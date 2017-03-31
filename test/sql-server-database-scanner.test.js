@@ -1,5 +1,7 @@
 const SqlServerConnectionInfo = require('../src/providers/sql-server/sql-server-connectoin-info').SqlServerConnectionInfo;
 const SqlServerDatabaseScanner = require('../src/providers/sql-server/sql-server-database-scanner').SqlServerDatabaseScanner;
+const SchemaResolver = require('../src/db/schema-resolver').SchemaResolver;
+
 const path = require('path');
 const currentPath = path.dirname(require.main.filename);
 
@@ -15,31 +17,18 @@ describe('SqlServerDatabaseScanner', () => {
 			Password: 'user'
 		});
 
-		let cm = new SqlServerDatabaseScanner(ci);
+		let resolver = new SchemaResolver();
+		let cm = new SqlServerDatabaseScanner(ci, resolver);
 
-		it('should bring at least one schema', () => {
-			let schema = cm.getSchema();
-
-			return schema.then(s => {
-				expect(s.Schemas.length).to.be.at.least(1);
-			});
-		});
-		it('should bring the "Application" schema', () => {
-			let schema = cm.getSchema();
-
-			return schema.then(s => {
-				expect(s.Schemas.filter(s => s.Name === 'Application').length).to.be.eql(1);
-			})
-		});
 		it('should bring at least one table', () => {
-			let schema = cm.getSchema();
+			let schema = cm.getSchemaInformation();
 
 			return schema.then(s => {
 				expect(s.Tables.length).to.be.at.least(1);
 			});
 		});
 		it('should bring the "Warehouse.Colors" table', () => {
-			let schema = cm.getSchema();
+			let schema = cm.getSchemaInformation();
 
 			return schema.then(s => {
 				s.Schemas.forEach(function (c) {

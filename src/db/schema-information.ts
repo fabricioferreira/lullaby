@@ -1,26 +1,10 @@
-export class SchemaInformation {
-	ConnectionInformation: ConnectionInformation;
+export class SchemaInfo {
 	DatabaseName: string;
-	Schemas: Schema[];
 	Tables: Table[];
 }
 
-export class ConnectionInformation {
-	ServerName: string;
-	DatabaseType: string;
-	ConnectionString: string;
-}
-
-export class Schema {
-	Owner: string;
-	Name: string;
-	constructor(schema: Schema) {
-		Object.assign(this, schema);
-	}
-}
-
 export class Table {
-	Schema: Schema;
+	Schema: string;
 	Id: number;
 	Name: string;
 	Columns: Column[];
@@ -31,6 +15,7 @@ export class Table {
 }
 
 export class Column {
+	TableId: number;
 	Name: string;
 	DatabaseType: string;
 	Size: number;

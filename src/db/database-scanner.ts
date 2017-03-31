@@ -1,5 +1,5 @@
-import { SchemaInformation } from './schema-information';
+import { SchemaInfo } from './schema-information';
 
 export interface IDatabaseScanner {
-	getSchema(): Promise<SchemaInformation>;
+	getSchemaInformation(): Promise<SchemaInfo>;
 }

@@ -1,5 +1,6 @@
 import { IDatabaseScanner } from '../../db/database-scanner';
-import { SchemaInformation, Schema, Table, Column } from '../../db/schema-information';
+import { SchemaResolver } from '../../db/schema-resolver';
+import { SchemaInfo, Table, Column } from '../../db/schema-information';
 import { SqlServerConnectionInfo } from './sql-server-connectoin-info';
 import { SqlServerMetadataQueries } from './sql-server-constants';
 import { Connection, Request, config } from 'mssql';
@@ -7,46 +8,33 @@ import * as _ from 'lodash';
 
 export class SqlServerDatabaseScanner implements IDatabaseScanner {
 
-	public constructor(private connectionInfo: SqlServerConnectionInfo) { }
+	public constructor(private connectionInfo: SqlServerConnectionInfo,
+		private schemaResolver: SchemaResolver) { }
 
-	public getSchema(): Promise<SchemaInformation> {
+	public getSchemaInformation(): Promise<SchemaInfo> {
 		let connection = this.createConnection();
 
-		let ret = new Promise<SchemaInformation>(resolve => {
-			let schemaInfo = new SchemaInformation();
-
+		let ret = new Promise<SchemaInfo>(resolve => {
 			connection.then(c => {
-				let req = new Request(c);
-				req.query(SqlServerMetadataQueries.SYS_SCHEMAS).then(recordset => {
-					schemaInfo.Schemas = [];
-					schemaInfo.Tables = [];
+				Promise.all([this.retrieveAllTables(c), this.retrieveAllColumns(c)])
+					.then(values => {
+						let tables = values[0];
+						let columns = values[1];
 
-					for (let i = 0; i < recordset.length; i++) {
-						let record = recordset[i];
-						let schema = new Schema({
-							Name: record.name,
-							Owner: record.owner
-						});
-						schemaInfo.Schemas.push(schema);
-					}
+						let schemaInfo: SchemaInfo = this.schemaResolver.resolve(tables, columns);
 
-					Promise.resolve(schemaInfo.Schemas)
-						.then(schemas => {
-							schemas.map(s => this.retrieveTables(c, s)
-								.then(t => schemaInfo.Tables.push(...t)));
-						}).then(() => resolve(schemaInfo));
-
-				}, reason => console.error);
-			}, reason => console.error);
+						resolve(schemaInfo);
+					});
+			});
 		});
 
 		return ret;
 	}
 
-	private retrieveTables(connection: Connection, schema: Schema): Promise<Table[]> {
+	private retrieveAllTables(connection: Connection): Promise<Table[]> {
 		let ret = new Promise<Table[]>(resolve => {
 			let req = new Request(connection);
-			let sql = SqlServerMetadataQueries.SYS_TABLES.replace('{schema_name}', schema.Name);
+			let sql = SqlServerMetadataQueries.SYS_TABLES;
 
 			req.query(sql).then(recordset => {
 				let tables: Table[] = [];
@@ -55,32 +43,32 @@ export class SqlServerDatabaseScanner implements IDatabaseScanner {
 					let table = new Table({
 						Id: record.table_id,
 						Name: record.table_name,
-						Schema: schema,
-						Columns: [],
-						PrimaryKey: []
+						Columns: null,
+						PrimaryKey: null,
+						Schema: record.schema_name
 					});
 					tables.push(table);
 				}
 
-				Promise.resolve(tables)
-					.then(tbs => tbs.map(t => this.retrieveColumns(connection, t)
-						.then(c => t.Columns.push(...c))
-						.then(() => resolve(tables))));
-			}, rejected => console.error);
+				resolve(tables);
+			}, rejected => {
+				throw rejected;
+			});
 		});
 
 		return ret;
 	}
 
-	private retrieveColumns(connection: Connection, table: Table): Promise<Column[]> {
+	private retrieveAllColumns(connection: Connection): Promise<Column[]> {
 		let ret = new Promise<Column[]>(resolve => {
 			let req = new Request(connection);
-			let sql = SqlServerMetadataQueries.SYS_COLUMS.replace('{table_id}', table.Id.toString());
+			let sql = SqlServerMetadataQueries.SYS_COLUMS;
 			req.query(sql).then(recordset => {
 				let columns: Column[] = [];
 				for (let i = 0; i < recordset.length; i++) {
 					let record = recordset[i];
 					let column = new Column({
+						TableId: record.table_id,
 						Name: record.column_name,
 						DatabaseType: record.type_name,
 						Size: record.max_length,
@@ -89,7 +77,9 @@ export class SqlServerDatabaseScanner implements IDatabaseScanner {
 					columns.push(column);
 				}
 				resolve(columns);
-			}, rejected => console.error);
+			}, rejected => {
+				throw rejected;
+			});
 		});
 		return ret;
 	}
