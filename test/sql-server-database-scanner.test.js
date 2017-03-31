@@ -31,17 +31,7 @@ describe('SqlServerDatabaseScanner', () => {
 			let schema = cm.getSchemaInformation();
 
 			return schema.then(s => {
-				s.Schemas.forEach(function (c) {
-					console.log(c.Name);
-				});
-
-				s.Tables.forEach(function (t) {
-					console.log(t.Schema.Name, ".", t.Name);
-				});
-
-				let table = s.Tables
-					.filter(t => t.Name === 'Colors'
-						&& t.Schema.Name === 'Warehouse');
+				let table = s.Tables.filter(t => t.Name === 'Colors' && t.Schema === 'Warehouse');
 				expect(table.length).to.be.eql(1);
 			});
 		});
