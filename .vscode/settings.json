@@ -6,6 +6,7 @@
 	"files.trimTrailingWhitespace": true,
 	"editor.formatOnSave": true,
 	"editor.renderWhitespace": "all",
+	"typescript.tsdk": "./node_modules/typescript/lib",
 	"files.exclude": {
 		"**/.git": true,
 		"**/.svn": true,
