@@ -1,10 +1,15 @@
-import { StartupConfig } from './startup-config';
+import { Configuration } from './configuration';
 import { RestServer } from './rest-server';
 
 export class Bootstrapper {
 	private _server: RestServer;
+	private _configuration: Configuration;
+	private _initializationComplete: boolean;
 
-	public initialize(config: StartupConfig): void {
+	public initialize(configFilePath: string): void {
+		this._configuration = new Configuration(configFilePath);
 
+		let self = this;
+		this._configuration.load().then(() => self._initializationComplete = true);
 	}
 }
