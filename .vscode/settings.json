@@ -12,6 +12,7 @@
 		"**/.svn": true,
 		"**/.hg": true,
 		"**/.DS_Store": true,
+		"**/node_modules": true,
 		"**/*.js": {
 			"when": "$(basename).ts"
 		},

@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha test/**/*.js",
     "test:watch": "npm run test -- -w",
     "build": "tsc ",
     "pretest": "npm run build"
@@ -27,7 +27,7 @@
   "homepage": "https://github.com/fabricioferreira/unyoke#readme",
   "devDependencies": {
     "@types/lodash": "^4.14.56",
-    "@types/mssql": "^3.3.1",
+    "@types/mssql": "~4.0.1",
     "@types/node": "^7.0.8",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
@@ -35,6 +35,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "mssql": "3.3.0"
+    "mssql": "~4.0.4"
   }
 }

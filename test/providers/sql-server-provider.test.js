@@ -1,5 +1,5 @@
 const SqlServerConnectionInfo = require('../src/providers/sql-server/sql-server-connectoin-info').SqlServerConnectionInfo;
-const SqlServerDatabaseScanner = require('../src/providers/sql-server/sql-server-database-scanner').SqlServerDatabaseScanner;
+const SqlServerProvider = require('../src/providers/sql-server/sql-server-provider').SqlServerProvider;
 const SchemaResolver = require('../src/db/schema-resolver').SchemaResolver;
 
 const path = require('path');
@@ -8,27 +8,29 @@ const currentPath = path.dirname(require.main.filename);
 const assert = require('assert');
 const expect = require('chai').expect;
 
-describe('SqlServerDatabaseScanner', () => {
+describe('SqlServerProvider', () => {
 	describe('getSchema()', () => {
 		let ci = new SqlServerConnectionInfo({
 			Database: 'WideWorldImporters',
 			Server: 'localhost\\SQLEXPRESS',
 			UserName: 'rest_user',
-			Password: 'user'
+			Password: 'user',
+			ConnectionTimeout: 5000,
+			RequestTimeout: 5000
 		});
 
 		let resolver = new SchemaResolver();
-		let cm = new SqlServerDatabaseScanner(ci, resolver);
+		let cm = new SqlServerProvider(ci, resolver);
 
 		it('should bring at least one table', () => {
-			let schema = cm.getSchemaInformation();
+			let schema = cm.getSchemaInfo();
 
 			return schema.then(s => {
 				expect(s.Tables.length).to.be.at.least(1);
-			});
+			}).catch(reason => console.log(reason));
 		});
 		it('should bring the "Warehouse.Colors" table', () => {
-			let schema = cm.getSchemaInformation();
+			let schema = cm.getSchemaInfo();
 
 			return schema.then(s => {
 				let table = s.Tables.filter(t => t.Name === 'Colors' && t.Schema === 'Warehouse');

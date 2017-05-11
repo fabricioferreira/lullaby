@@ -1,4 +1,4 @@
-import { Route, RouteConfig } from './route';
+import { Route, RouteConfig } from 'core/route';
 
 export class RestServer {
 	public start(): void {

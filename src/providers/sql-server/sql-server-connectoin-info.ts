@@ -3,6 +3,8 @@ export class SqlServerConnectionInfo {
 	Server: string;
 	UserName: string;
 	Password: string;
+	ConnectionTimeout: number;
+	RequestTimeout: number;
 	UseIntegratedAuthentication: boolean;
 
 	constructor(info: SqlServerConnectionInfo) {

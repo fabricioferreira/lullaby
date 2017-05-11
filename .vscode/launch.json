@@ -20,6 +20,7 @@
 			"outFiles": []
 		},
 		{
+			"request": "launch",
 			// Name of configuration; appears in the launch configuration drop down menu.
 			"name": "Run mocha",
 			// Type of configuration. Possible values: "node", "mono".
@@ -30,7 +31,7 @@
 			"stopOnEntry": false,
 			// Command line arguments passed to the program.
 			"args": [
-				"test/configuration.test.js"
+				"test/sql-server-database-scanner.test.js"
 			],
 			// Workspace relative or absolute path to the working directory of the program being debugged. Default is the current workspace.
 			"cwd": "${workspaceRoot}/.",

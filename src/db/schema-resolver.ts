@@ -1,4 +1,4 @@
-import { Table, Column, SchemaInfo } from './schema-information';
+import { Table, Column, SchemaInfo } from 'db/schema-information';
 import * as _ from 'lodash';
 
 export class SchemaResolver {

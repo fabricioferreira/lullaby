@@ -1,5 +1,5 @@
-import { Configuration } from './configuration';
-import { RestServer } from './rest-server';
+import { Configuration } from 'core/configuration';
+import { RestServer } from 'core/rest-server';
 
 export class Bootstrapper {
 	private _server: RestServer;
