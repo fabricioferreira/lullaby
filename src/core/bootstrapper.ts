@@ -11,5 +11,11 @@ export class Bootstrapper {
 
 		let self = this;
 		this._configuration.load().then(() => self._initializationComplete = true);
+
+
+	}
+
+	public get initializationComplete() {
+		return this._initializationComplete;
 	}
 }
