@@ -1,8 +1,8 @@
-import { IProvider } from 'db/provider';
-import { SchemaResolver } from 'db/schema-resolver';
-import { SchemaInfo, Table, Column } from 'db/schema-information';
-import { SqlServerConnectionInfo } from 'providers/sql-server/sql-server-connectoin-info';
-import { SqlServerMetadataQueries } from 'providers/sql-server/sql-server-constants';
+import { IProvider } from '../../db/provider';
+import { SchemaResolver } from '../../db/schema-resolver';
+import { SchemaInfo, Table, Column } from '../../db/schema-info';
+import { SqlServerConnectionInfo } from '../../providers/sql-server/sql-server-connectoin-info';
+import { SqlServerMetadataQueries } from '../../providers/sql-server/sql-server-constants';
 import { ConnectionPool, Request, config } from 'mssql';
 import * as _ from 'lodash';
 

@@ -1,6 +1,6 @@
-const SchemaResolver = require('../src/db/schema-resolver').SchemaResolver;
-const Table = require('../src/db/schema-information').Table;
-const Column = require('../src/db/schema-information').Column;
+const SchemaResolver = require('../../src/db/schema-resolver').SchemaResolver;
+const Table = require('../../src/db/schema-info').Table;
+const Column = require('../../src/db/schema-info').Column;
 
 const path = require('path');
 const currentPath = path.dirname(require.main.filename);

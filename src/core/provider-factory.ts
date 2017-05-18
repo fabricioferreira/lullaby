@@ -1,4 +1,4 @@
-import { IProvider } from 'db/provider';
+import { IProvider } from '../db/provider';
 
 export class ProviderFactory {
 	public constructor() { }

@@ -1,5 +1,5 @@
-import { Configuration } from 'core/configuration';
-import { RestServer } from 'core/rest-server';
+import { Configuration } from './configuration';
+import { RestServer } from './rest-server';
 
 export class Bootstrapper {
 	private _server: RestServer;
@@ -11,8 +11,6 @@ export class Bootstrapper {
 
 		let self = this;
 		this._configuration.load().then(() => self._initializationComplete = true);
-
-
 	}
 
 	public get initializationComplete() {

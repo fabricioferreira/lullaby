@@ -1,4 +1,4 @@
-var Configuration = require('../src/core/configuration').Configuration;
+var Configuration = require('../../src/core/configuration').Configuration;
 var path = require('path');
 var currentPath = path.dirname(require.main.filename);
 

@@ -1,20 +1,17 @@
 {
 	"compilerOptions": {
-		"baseUrl": "./",
-		"paths": {
-			"*": [
-				"./src/*"
-			]
-		},
 		"module": "commonjs",
+		"moduleResolution": "node",
 		"noImplicitAny": true,
 		"removeComments": false,
 		"preserveConstEnums": true,
 		"sourceMap": true,
 		"emitDecoratorMetadata": false,
 		"experimentalDecorators": true,
-		"target": "es2017",
+		"target": "es5",
 		"lib": [
+			"es5",
+			"es2015",
 			"es2017"
 		],
 		"types": [
@@ -23,7 +20,7 @@
 		]
 	},
 	"include": [
-		"./src/**/*"
+		"./src/**/*.ts"
 	],
 	"exclude": [
 		"node_modules",

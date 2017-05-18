@@ -1,4 +1,4 @@
-import { SchemaInfo } from 'db/schema-information';
+import { SchemaInfo } from './schema-info';
 
 export interface IProvider {
 	getSchemaInfo(): Promise<SchemaInfo>;

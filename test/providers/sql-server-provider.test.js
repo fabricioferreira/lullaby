@@ -1,6 +1,6 @@
-const SqlServerConnectionInfo = require('../src/providers/sql-server/sql-server-connectoin-info').SqlServerConnectionInfo;
-const SqlServerProvider = require('../src/providers/sql-server/sql-server-provider').SqlServerProvider;
-const SchemaResolver = require('../src/db/schema-resolver').SchemaResolver;
+const SqlServerConnectionInfo = require('../../src/providers/sql-server/sql-server-connectoin-info').SqlServerConnectionInfo;
+const SqlServerProvider = require('../../src/providers/sql-server/sql-server-provider').SqlServerProvider;
+const SchemaResolver = require('../../src/db/schema-resolver').SchemaResolver;
 
 const path = require('path');
 const currentPath = path.dirname(require.main.filename);

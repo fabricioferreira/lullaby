@@ -1,7 +1,7 @@
 // TODO: Find a way to dinamically load providers based on the desired type
 
-import { IProvider } from 'db/provider';
-import { SqlServerProvider } from 'providers/sql-server/sql-server-provider';
+import { IProvider } from './provider';
+import { SqlServerProvider } from '../providers/sql-server/sql-server-provider';
 
 export class ProviderFactory {
 	public constructor() { }
