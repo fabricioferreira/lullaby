@@ -120,5 +120,46 @@ describe('SchemaResolver', () => {
 			expect(schema.Tables[0].Columns.length).to.be.eql(2);
 			expect(schema.Tables[1].Columns.length).to.be.eql(2);
 		});
+		it('should return a schema with a table, two columns each, with one primary key', function () {
+			let resolver = new SchemaResolver();
+			let tables = [];
+			let columns = [];
+
+			tables.push(
+				new Table({
+					Id: 1,
+					Name: 'Table1',
+					Schema: 'dbo',
+					Columns: null,
+					PrimaryKey: null
+				})
+			);
+
+			columns.push(
+				new Column({
+					TableId: 1,
+					Name: 'Column1',
+					DatabaseType: 'integer',
+					Precision: 0,
+					Size: 4,
+					IsPrimaryKey: true
+				}),
+				new Column({
+					TableId: 1,
+					Name: 'Column2',
+					DatabaseType: 'varchar',
+					Precision: 0,
+					Size: 20,
+					IsPrimaryKey: false
+				})
+			);
+
+			let schema = resolver.resolve(tables, columns);
+
+			expect(schema.Tables.length).to.be.eql(1);
+			expect(schema.Tables[0].Columns.length).to.be.eql(2);
+			expect(schema.Tables[0].PrimaryKey.length).to.be.eql(1);
+			expect(schema.Tables[0].PrimaryKey[0].Name).to.be.eql(columns[0].Name);
+		});
 	})
 });

@@ -1,14 +1,14 @@
 import { IProvider } from '../../db/provider';
 import { SchemaResolver } from '../../db/schema-resolver';
 import { SchemaInfo, Table, Column } from '../../db/schema-info';
-import { SqlServerConnectionInfo } from '../../providers/sql-server/sql-server-connectoin-info';
+import { ConnectionInfo } from '../../db/connection-info';
 import { SqlServerMetadataQueries } from '../../providers/sql-server/sql-server-constants';
 import { ConnectionPool, Request, config } from 'mssql';
 import * as _ from 'lodash';
 
 export class SqlServerProvider implements IProvider {
 
-	public constructor(private connectionInfo: SqlServerConnectionInfo,
+	public constructor(private connectionInfo: ConnectionInfo,
 		private schemaResolver: SchemaResolver) { }
 
 	public async getSchemaInfo(): Promise<SchemaInfo> {
@@ -65,7 +65,8 @@ export class SqlServerProvider implements IProvider {
 					Name: record.column_name,
 					DatabaseType: record.type_name,
 					Size: record.max_length,
-					Precision: record.precision
+					Precision: record.precision,
+					IsPrimaryKey: record.is_pk
 				});
 				columns.push(column);
 			}

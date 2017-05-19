@@ -20,6 +20,7 @@ export class Column {
 	DatabaseType: string;
 	Size: number;
 	Precision: number;
+	IsPrimaryKey: boolean;
 	constructor(column: Column) {
 		Object.assign(this, column);
 	}

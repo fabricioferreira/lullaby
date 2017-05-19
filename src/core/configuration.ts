@@ -1,13 +1,13 @@
 import { readFileSync, exists } from 'fs';
+import { ConnectionInfo } from '../db/connection-info';
 
 export class Configuration {
-	private _loaded: boolean = false;
 	private _serverPort: number;
 	private _apiPath: string;
+	private _providerType: string;
+	private _connectionInfo: ConnectionInfo;
 
-	public constructor(private _configFilePath: string) {
-		this.load().then(() => this._loaded = true);
-	}
+	public constructor(private _configFilePath: string) { }
 
 	get ServerPort(): number {
 		return this._serverPort;
@@ -15,6 +15,14 @@ export class Configuration {
 
 	get ApiPath(): string {
 		return this._apiPath;
+	}
+
+	get ProviderType(): string {
+		return this._providerType;
+	}
+
+	get ConnectionInfo(): ConnectionInfo {
+		return this._connectionInfo;
 	}
 
 	public load(): Promise<void> {
@@ -27,6 +35,15 @@ export class Configuration {
 
 					self._apiPath = config.ApiPath;
 					self._serverPort = config.ServerPort;
+					self._providerType = config.ProviderType;
+					self._connectionInfo = new ConnectionInfo({
+						Server: config.ConnectionInfo.Server,
+						Database: config.ConnectionInfo.Database,
+						UserName: config.ConnectionInfo.UserName,
+						Password: config.ConnectionInfo.Password,
+						ConnectionTimeout: config.ConnectionInfo.ConnectionTimeout,
+						RequestTimeout: config.ConnectionInfo.RequestTimeout
+					});
 
 					resolve();
 				}

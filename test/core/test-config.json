@@ -3,8 +3,8 @@
 	"ApiPath": "/rest",
 	"ProviderType": "sqlserver",
 	"ConnectionInfo": {
-		"Server": "localhost\\SQLEXPRESS",
-		"Database": "WideWorldImporters",
+		"Server": "localhost",
+		"Database": "db",
 		"UserName": "rest_user",
 		"Password": "user",
 		"ConnectionTimeout": "5000",

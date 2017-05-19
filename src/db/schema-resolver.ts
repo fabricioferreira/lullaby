@@ -10,6 +10,7 @@ export class SchemaResolver {
 
 		tables.forEach(t => {
 			t.Columns = columns.filter(c => c.TableId === t.Id);
+			t.PrimaryKey = columns.filter(c => c.IsPrimaryKey);
 		});
 
 		let ret = new SchemaInfo();

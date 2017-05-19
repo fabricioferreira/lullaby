@@ -1,5 +1,11 @@
 export class ConnectionInfo {
-	ServerName: string;
-	DatabaseType: string;
-	ConnectionString: string;
+	Server: string;
+	Database: string;
+	UserName: string;
+	Password: string;
+	ConnectionTimeout: number;
+	RequestTimeout: number;
+	constructor(info: ConnectionInfo) {
+		Object.assign(this, info);
+	}
 }

@@ -1,4 +1,4 @@
-const SqlServerConnectionInfo = require('../../src/providers/sql-server/sql-server-connectoin-info').SqlServerConnectionInfo;
+const ConnectionInfo = require('../../src/db/connection-info').ConnectionInfo;
 const SqlServerProvider = require('../../src/providers/sql-server/sql-server-provider').SqlServerProvider;
 const SchemaResolver = require('../../src/db/schema-resolver').SchemaResolver;
 
@@ -10,7 +10,7 @@ const expect = require('chai').expect;
 
 describe('SqlServerProvider', () => {
 	describe('getSchema()', () => {
-		let ci = new SqlServerConnectionInfo({
+		let ci = new ConnectionInfo({
 			Database: 'WideWorldImporters',
 			Server: 'localhost\\SQLEXPRESS',
 			UserName: 'rest_user',
