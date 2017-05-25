@@ -7,7 +7,7 @@
 		"Database": "WideWorldImporters",
 		"UserName": "rest_user",
 		"Password": "user",
-		"ConnectionTimeout": "5000",
-		"RequestTimeout": "5000"
+		"ConnectionTimeout": 5000,
+		"RequestTimeout": 5000
 	}
 }

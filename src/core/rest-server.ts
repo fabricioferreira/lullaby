@@ -1,11 +1,7 @@
-import { Route, RouteConfig } from './route';
+import { Route } from './route';
 
 export class RestServer {
 	public start(): void {
 
-	}
-
-	public createRoute(route: RouteConfig): Route {
-		return null;
 	}
 }

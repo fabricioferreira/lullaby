@@ -1,7 +1,4 @@
 export class Route {
-
-}
-
-export class RouteConfig {
-
+	public Path: string;
+	public Handler: any;
 }

@@ -4,6 +4,7 @@ import { SchemaInfo, Table, Column } from '../../db/schema-info';
 import { ConnectionInfo } from '../../db/connection-info';
 import { SqlServerMetadataQueries } from '../../providers/sql-server/sql-server-constants';
 import { ConnectionPool, Request, config } from 'mssql';
+import { Request as expRequest, Response, IRoute } from '@types/express';
 import * as _ from 'lodash';
 
 export class SqlServerProvider implements IProvider {
@@ -94,5 +95,18 @@ export class SqlServerProvider implements IProvider {
 		};
 
 		return cf;
+	}
+
+	private static createResponseObject(baseUrl: string, parameters: any): any {
+		return {
+			Url: baseUrl,
+			Params: parameters
+		};
+	}
+
+	public getHandler(req: expRequest, res: Response): void {
+		let obj = SqlServerProvider.createResponseObject(req.baseUrl, req.params);
+		res.write(JSON.stringify(obj));
+		res.end();
 	}
 }

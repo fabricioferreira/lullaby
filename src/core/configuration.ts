@@ -44,8 +44,6 @@ export class Configuration {
 						ConnectionTimeout: config.ConnectionInfo.ConnectionTimeout,
 						RequestTimeout: config.ConnectionInfo.RequestTimeout
 					});
-
-					resolve();
 				}
 				resolve();
 			});
