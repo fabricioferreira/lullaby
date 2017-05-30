@@ -1,6 +1,9 @@
 import { Bootstrapper } from './core/bootstrapper';
-import { resolve } from 'path';
+import { resolve, dirname } from 'path';
 
 let b = new Bootstrapper();
-b.initialize(resolve(__dirname, './config.json'))
+
+let configPath = resolve(__dirname, './config.json');
+
+b.initialize(configPath)
 	.then(() => b.start());

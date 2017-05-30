@@ -1,24 +1,26 @@
 var path = require('path');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-	entry: './src/index.ts',
+	entry: './src/index.js',
+	target: 'node',
+	node: {
+		__dirname: true,
+		__filename: true
+	},
 	output: {
-		filename: 'bundle.js',
+		filename: 'lullaby.js',
 		path: path.resolve(__dirname, 'dist/')
 	},
-	module: {
-		rules: [
-			{
-				test: /\.tsx?$/,
-				loader: 'awesome-typescript-loader',
-				exclude: /node_modules/,
-			}
-		]
-	},
 	resolve: {
-		extensions: [".tsx", ".ts", ".js"]
+		extensions: [".js"]
 	},
-	node: {
-		fs: 'empty'
-	}
+	plugins: [
+		new CopyWebpackPlugin([
+			{
+				from: path.resolve(__dirname, 'src/config.json'),
+				to: path.resolve(__dirname, 'dist/config.json')
+			}
+		])
+	]
 };

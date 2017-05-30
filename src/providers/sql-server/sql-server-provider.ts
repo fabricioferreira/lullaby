@@ -13,16 +13,21 @@ export class SqlServerProvider implements IProvider {
 		private schemaResolver: SchemaResolver) { }
 
 	public async getSchemaInfo(): Promise<SchemaInfo> {
-		let connection = await this.createConnection();
-		let tables = await this.retrieveAllTables(connection);
-		let columns = await this.retrieveAllColumns(connection);
+		try {
+			let connection = await this.createConnection();
+			let tables = await this.retrieveAllTables(connection);
+			let columns = await this.retrieveAllColumns(connection);
 
-		let ret = new Promise<SchemaInfo>(resolve => {
-			let schemaInfo = this.schemaResolver.resolve(tables, columns);
-			resolve(schemaInfo);
-		});
+			let ret = new Promise<SchemaInfo>(resolve => {
+				let schemaInfo = this.schemaResolver.resolve(tables, columns);
+				resolve(schemaInfo);
+			});
 
-		return ret;
+			return ret;
+		}
+		catch (err) {
+			throw `Error initializing the SqlServerProvider.\nError: ${err}`;
+		}
 	}
 
 	private async retrieveAllTables(connection: ConnectionPool): Promise<Table[]> {

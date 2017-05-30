@@ -44,6 +44,8 @@ export class Configuration {
 						ConnectionTimeout: config.ConnectionInfo.ConnectionTimeout,
 						RequestTimeout: config.ConnectionInfo.RequestTimeout
 					});
+				} else {
+					throw `Configuration file ${self._configFilePath} not found!`;
 				}
 				resolve();
 			});

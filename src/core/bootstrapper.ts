@@ -56,7 +56,6 @@ export class Bootstrapper {
 
 	public start(): void {
 		if (this._initializationComplete) {
-			console.log("Started");
 			this._express.listen(this._configuration.ServerPort,
 				() => console.log("Listen on port ", this._configuration.ServerPort));
 		}
