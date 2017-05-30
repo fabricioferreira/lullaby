@@ -102,7 +102,7 @@ export class SqlServerProvider implements IProvider {
 		return cf;
 	}
 
-	private static createResponseObject(baseUrl: string, parameters: any): any {
+	private static createResponseObject(baseUrl: any, parameters: any): any {
 		return {
 			Url: baseUrl,
 			Params: parameters
@@ -111,6 +111,7 @@ export class SqlServerProvider implements IProvider {
 
 	public getHandler(req: expRequest, res: Response): void {
 		let obj = SqlServerProvider.createResponseObject(req.baseUrl, req.params);
+		res.write('incoming request');
 		res.write(JSON.stringify(obj));
 		res.end();
 	}

@@ -4,8 +4,7 @@ import { ProviderFactory } from '../db/provider-factory';
 import { IProvider } from '../db/provider';
 import { SchemaInfo } from '../db/schema-info';
 import { RouteProvider } from './route-provider';
-import { Application, IRoute } from '@types/express';
-import { Route } from './route';
+import * as express from 'express';
 
 export class Bootstrapper {
 	private _server: RestServer;
@@ -14,8 +13,15 @@ export class Bootstrapper {
 	private _provider: IProvider = null;
 	private _providerFactory: ProviderFactory = new ProviderFactory();
 	private _schemaInfo: SchemaInfo;
-	private _routeProvider: RouteProvider = new RouteProvider();
-	private _express: Application = require('express')();
+	private _express: express.Application;
+	private _router: express.Router;
+	private _routeProvider: RouteProvider;
+
+	public constructor() {
+		this._express = express();
+		this._router = express.Router();
+		this._routeProvider = new RouteProvider();
+	}
 
 	public initialize(configFilePath: string): Promise<void> {
 		this._configuration = new Configuration(configFilePath);
@@ -31,15 +37,18 @@ export class Bootstrapper {
 							self._schemaInfo = i;
 							self._initializationComplete = true;
 
-							let routes = self._routeProvider.createRoutes(i, p);
-							routes.forEach(r => {
-								self._express.get(r.Path, r.Handler);
+							let routerDesc: any[] = [];
+							self._routeProvider.createRoutes(i, uri => {
+								self._router.use(uri, self._provider.getHandler);
+								routerDesc.push({ Route: uri });
 							});
 
-							self._express.get('/__routes', (req, res) => {
-								res.write(JSON.stringify(routes));
+							self._router.use('/__routes', (req, res) => {
+								res.write(JSON.stringify(routerDesc));
 								res.end();
 							});
+
+							self._express.use('/', self._router);
 
 							resolve();
 						});
