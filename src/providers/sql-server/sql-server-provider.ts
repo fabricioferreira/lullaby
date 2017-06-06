@@ -115,4 +115,16 @@ export class SqlServerProvider implements IProvider {
 		res.write(JSON.stringify(obj));
 		res.end();
 	}
+
+	public getTableFromUrl(url: string): string {
+		if (_.isNil(url))
+			return null;
+
+		let length: number = url.indexOf('/', 1) - 1;
+		// /cars/1
+		// 7 -
+		let table: string = url.substr(1, length);
+
+		return table;
+	}
 }

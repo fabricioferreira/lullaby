@@ -27,7 +27,7 @@ export class Configuration {
 
 	public load(): Promise<void> {
 		let self = this;
-		let ret = new Promise<void>(resolve => {
+		let ret = new Promise<void>((resolve, reject) => {
 			exists(self._configFilePath, (exists) => {
 				if (exists) {
 					let configContent = readFileSync(self._configFilePath);
@@ -45,7 +45,7 @@ export class Configuration {
 						RequestTimeout: config.ConnectionInfo.RequestTimeout
 					});
 				} else {
-					throw `Configuration file ${self._configFilePath} not found!`;
+					reject(`Configuration file ${self._configFilePath} not found!`);
 				}
 				resolve();
 			});

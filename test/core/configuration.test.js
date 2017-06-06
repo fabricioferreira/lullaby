@@ -2,7 +2,10 @@ var Configuration = require('../../src/core/configuration').Configuration;
 var path = require('path');
 var currentPath = path.dirname(require.main.filename);
 
-var assert = require('chai').assert;
+const assert = require('chai').assert;
+const expect = require('chai').expect;
+
+const configFilePath = path.resolve(__dirname, './test-config.json');
 
 /*
 {
@@ -22,12 +25,12 @@ var assert = require('chai').assert;
 
 describe('Configuration', () => {
 	describe('load()', () => {
-		it('should not fail if no configuration file is provided', () => {
-			let config = new Configuration('');
-			return config.load();
+		it('should fail if no configuration file is provided, or if it is not found.', () => {
+			let c = new Configuration('');
+			c.load().catch((reason) => expect(reason).to.contain('not found'));
 		});
 		it('should load configuration if a valid file is provided', () => {
-			let config = new Configuration(path.resolve(__dirname, 'test-config.json'));
+			let config = new Configuration(configFilePath);
 
 			return config.load().then(() => {
 				assert.equal(config.ServerPort, 3000, 'Port configuration was not loaded.');

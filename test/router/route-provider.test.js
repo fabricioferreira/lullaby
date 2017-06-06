@@ -1,39 +1,45 @@
 const RouteProvider = require('../../src/core/route-provider').RouteProvider;
+const SchemaInfo = require('../../src/db/schema-info').SchemaInfo;
+const Table = require('../../src/db/schema-info').Table;
+const Column = require('../../src/db/schema-info').Column;
 
-const path = require('path');
-const currentPath = path.dirname(require.main.filename);
-
-const assert = require('assert');
+const assert = require('chai').assert;
 const expect = require('chai').expect;
 
 describe('RouteProvider', () => {
-	describe('getSchema()', () => {
-		let ci = new ConnectionInfo({
-			Database: 'WideWorldImporters',
-			Server: 'localhost\\SQLEXPRESS',
-			UserName: 'rest_user',
-			Password: 'user',
-			ConnectionTimeout: 5000,
-			RequestTimeout: 5000
+	describe('createRoutes()', () => {
+		let si = new SchemaInfo();
+		si.DatabaseName = "DatabaseTestName";
+		si.Tables = [];
+
+		let table = new Table({
+			Schema: 'dbo',
+			Id: 1,
+			Name: 'TableName1',
+			Columns: [],
+			PrimaryKey: []
 		});
 
-		let resolver = new SchemaResolver();
-		let cm = new SqlServerProvider(ci, resolver);
+		table.Columns.push(new Column({
+			TableId: 1,
+			Name: 'ColumnName1',
+			DatabaseType: 'varchar',
+			Size: 20,
+			Precision: 0,
+			IsPrimaryKey: true
+		}));
+		table.PrimaryKey.push(table.Columns[0]);
 
-		it('should bring at least one table', () => {
-			let schema = cm.getSchemaInfo();
+		si.Tables.push(table);
+		it('create a single route', () => {
+			let routes = [];
+			let provider = new RouteProvider();
+			let actual = provider.createRoutes(si, (route) => routes.push(route));
 
-			return schema.then(s => {
-				expect(s.Tables.length).to.be.at.least(1);
-			}).catch(reason => console.log(reason));
-		});
-		it('should bring the "Warehouse.Colors" table', () => {
-			let schema = cm.getSchemaInfo();
+			expect(routes.length).to.be.eql(1);
 
-			return schema.then(s => {
-				let table = s.Tables.filter(t => t.Name === 'Colors' && t.Schema === 'Warehouse');
-				expect(table.length).to.be.eql(1);
-			});
+			let theOneRoute = routes.pop();
+			expect(theOneRoute).to.be.eql('/tablename1/:columnname1');
 		});
 	});
 });
