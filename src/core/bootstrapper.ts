@@ -31,15 +31,16 @@ export class Bootstrapper {
 			self._configuration.load().then(() => {
 				self._providerFactory.createProvider(self._configuration.ProviderType,
 					self._configuration.ConnectionInfo).then(p => {
-						self._provider = p;
 
+						self._provider = p;
 						self._provider.getSchemaInfo().then(i => {
+							self._provider.setSchemaInfo(i);
 							self._schemaInfo = i;
 							self._initializationComplete = true;
 
 							let routerDesc: any[] = [];
 							self._routeProvider.createRoutes(i, uri => {
-								self._router.use(uri, self._provider.getHandler);
+								self._router.use(uri, self._provider.handler().getHandler);
 								routerDesc.push({ Route: uri });
 							});
 

@@ -54,4 +54,13 @@ describe('SqlServerProvider', () => {
 			expect(actual).to.be.eql(expected);
 		});
 	});
+	describe('getParametersFromUrl', () => {
+		it('should return a list with one parameter and value', () => {
+			let url = '/cars/1';
+			let expected = 'cars';
+			let actual = provider.getTableFromUrl(url);
+
+			expect(actual).to.be.eql(expected);
+		});
+	});
 });

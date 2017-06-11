@@ -3,23 +3,38 @@ import { SchemaResolver } from '../../db/schema-resolver';
 import { SchemaInfo, Table, Column } from '../../db/schema-info';
 import { ConnectionInfo } from '../../db/connection-info';
 import { SqlServerMetadataQueries } from '../../providers/sql-server/sql-server-constants';
+import { SqlServerQueryBuilder } from './sql-server-query-builder';
+import { SqlServerHandler } from './sql-server-handler';
 import { ConnectionPool, Request, config } from 'mssql';
-import { Request as expRequest, Response, IRoute } from '@types/express';
+import { Request as expRequest, Response, NextFunction, IRoute } from '@types/express';
 import * as _ from 'lodash';
 
 export class SqlServerProvider implements IProvider {
+	private _builder: SqlServerQueryBuilder = new SqlServerQueryBuilder();
+	private _schemaInfo: SchemaInfo = null;
+	public _handler: SqlServerHandler = SqlServerHandler;
 
-	public constructor(private connectionInfo: ConnectionInfo,
-		private schemaResolver: SchemaResolver) { }
+	public constructor(private connectionInfo: ConnectionInfo, private schemaResolver: SchemaResolver) {
+		SqlServerHandler.Resolver = schemaResolver;
+		SqlServerHandler.ConnectionInfo = connectionInfo;
+	}
+
+	public handler(): any {
+		return this._handler;
+	}
 
 	public async getSchemaInfo(): Promise<SchemaInfo> {
 		try {
+			if (this._schemaInfo !== null) return this._schemaInfo;
+
 			let connection = await this.createConnection();
 			let tables = await this.retrieveAllTables(connection);
 			let columns = await this.retrieveAllColumns(connection);
+			let self = this;
 
 			let ret = new Promise<SchemaInfo>(resolve => {
-				let schemaInfo = this.schemaResolver.resolve(tables, columns);
+				let schemaInfo = self.schemaResolver.resolve(tables, columns);
+
 				resolve(schemaInfo);
 			});
 
@@ -28,6 +43,10 @@ export class SqlServerProvider implements IProvider {
 		catch (err) {
 			throw `Error initializing the SqlServerProvider.\nError: ${err}`;
 		}
+	}
+
+	public setSchemaInfo(info: SchemaInfo): void {
+		this._schemaInfo = info;
 	}
 
 	private async retrieveAllTables(connection: ConnectionPool): Promise<Table[]> {
@@ -45,7 +64,8 @@ export class SqlServerProvider implements IProvider {
 					Name: record.table_name,
 					Columns: null,
 					PrimaryKey: null,
-					Schema: record.schema_name
+					Schema: record.schema_name,
+					AssociatedRoute: null
 				});
 				tables.push(table);
 			}
@@ -102,18 +122,12 @@ export class SqlServerProvider implements IProvider {
 		return cf;
 	}
 
-	private static createResponseObject(baseUrl: any, parameters: any): any {
-		return {
-			Url: baseUrl,
-			Params: parameters
-		};
-	}
+	private async runQuery(connection: ConnectionPool, sql: string): Promise<any> {
+		let req = new Request(connection);
+		let result = await req.query(sql);
+		let recordset = result.recordset;
 
-	public getHandler(req: expRequest, res: Response): void {
-		let obj = SqlServerProvider.createResponseObject(req.baseUrl, req.params);
-		res.write('incoming request');
-		res.write(JSON.stringify(obj));
-		res.end();
+		return recordset;
 	}
 
 	public getTableFromUrl(url: string): string {
@@ -121,10 +135,27 @@ export class SqlServerProvider implements IProvider {
 			return null;
 
 		let length: number = url.indexOf('/', 1) - 1;
-		// /cars/1
-		// 7 -
 		let table: string = url.substr(1, length);
 
 		return table;
+	}
+
+	public async createResultObject(baseUrl: any, parameters: any): Promise<string> {
+		let table = this.getTableFromUrl(baseUrl);
+		let schemaInfo = await this.getSchemaInfo();
+		console.log(table);
+		let schemaTable = schemaInfo.Tables.find(t => t.Name.toLowerCase() === table);
+		let primaryKey = schemaTable.PrimaryKey[0];
+		let parameter = parameters[primaryKey.Name.toLowerCase()];
+		let sql = this._builder.createQuery(schemaTable.Schema, table, primaryKey.Name.toLowerCase(), parameter);
+
+		let connection = await this.createConnection();
+		let result: any = await this.runQuery(connection, sql);
+
+		return new Promise<string>(resolve => {
+			let json = JSON.stringify(result);
+			// let json = JSON.stringify({ url: baseUrl, params: parameters, p: parameter });
+			resolve(json);
+		});
 	}
 }

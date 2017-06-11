@@ -1,6 +1,8 @@
 import { SchemaInfo } from './schema-info';
 
 export interface IProvider {
+	setSchemaInfo(info: SchemaInfo): void;
+	handler(): any;
 	getSchemaInfo(): Promise<SchemaInfo>;
-	getHandler(req: any, res: any): void;
+	createResultObject(baseUrl: any, parameters: any): Promise<string>;
 }

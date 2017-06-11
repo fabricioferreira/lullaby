@@ -8,8 +8,19 @@
 			"type": "node",
 			"request": "launch",
 			"name": "Launch Program",
-			"program": "${workspaceRoot}\\src\\index.js",
-			"outFiles": []
+			"program": "${workspaceRoot}\\src\\index.ts",
+			"preLaunchTask": "compile",
+			"outFiles": [],
+			"cwd": "${workspaceRoot}",
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"runtimeArgs": [
+				"--nolazy"
+			],
+			"runtimeExecutable": null,
+			"sourceMaps": true,
+			"stopOnEntry": false
 		},
 		{
 			"type": "node",

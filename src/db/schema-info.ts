@@ -9,6 +9,7 @@ export class Table {
 	Name: string;
 	Columns: Column[];
 	PrimaryKey: Column[];
+	AssociatedRoute: string;
 	constructor(table: Table) {
 		Object.assign(this, table);
 	}

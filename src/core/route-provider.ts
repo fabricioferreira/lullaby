@@ -15,6 +15,9 @@ export class RouteProvider {
 			if (table.PrimaryKey.length > 0) {
 				uri += '/:' + table.PrimaryKey[0].Name.toLowerCase();
 			}
+
+			table.AssociatedRoute = uri;
+
 			router(uri);
 		});
 	}

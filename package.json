@@ -8,7 +8,9 @@
   },
   "scripts": {
     "start": "tsc && npm run build && node ./dist/lullaby.js",
+    "start2": "tsc && node ./src/index.js",
     "build": "tsc && webpack --config webpack.config.js",
+    "build2": "tsc",
     "test": "mocha test/**/*.js",
     "test:watch": "npm run test -- -w",
     "pretest": "tsc"
